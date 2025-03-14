@@ -7,7 +7,7 @@ st.markdown(
     """
     <style>
         .stApp {
-            background-color: #191919;  /* Dark gray background */
+            background-color: #142030;  /* Dark gray background */
             color: white;  /* White text */
         }
         h1, h2, h3, h4, h5, h6 {
@@ -90,7 +90,7 @@ def main():
     # Initialize session state
     if "generate_clicked" not in st.session_state:
         st.session_state.generate_clicked = False
-
+    st.markdown("<hr style='border: none; height: 1px; background-color: white; margin-top: 20px; margin-bottom: 20px;'>", unsafe_allow_html=True)
     # Button to generate password
     if st.button('Generate password'):
         st.session_state.generate_clicked = True
