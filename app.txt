@@ -1,0 +1,48 @@
+import re
+import streamlit as st
+
+st.title('Password Strength Checker')
+st.subheader('Please enter your password to check its strength and Security level')
+def password_checker(user_input):
+    score = 0
+    
+    st.write("Your Password: ", user_input)
+
+    if not user_input:
+        st.error('please enter Password')
+        return
+    
+    if len(user_input) >= 8:
+        score += 1
+    else:
+        st.write("⚠️ Password should be at least 8 characters long.")
+    
+    if re.search(r"[A-Z]", user_input) and re.search(r"[a-z]", user_input):
+        score += 1
+        # print('both capital and small letter available')
+    else:
+        st.write("⚠️ Password should contain at least one upper and one lowercase letter.")
+
+    if re.search(r"\d", user_input):
+        score += 1
+        # print("number mujood hai")
+    else:
+        st.write("⚠️ Password should contain at least one digit.")
+    
+    if re.search("[!@#$%^&*]", user_input):
+        score += 1
+        # print("special character mujood hai")
+    else:
+        st.write("⚠️ Password should contain at least one special character (!@#$%^&*).")
+
+    if score == 4:
+        st.write('✅ Your password is strong!')
+    elif score == 3:
+        st.write("🟡 Your password is moderate. Consider improving it.")
+    else:
+        st.write('🔴 Your password is weak. Please follow the suggestions above.')
+
+password = st.text_input("Please Enter Password: ", type="password")
+
+if st.button("Check"):
+    password_checker(password)
