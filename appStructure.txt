@@ -1,0 +1,165 @@
+# Password Strength Checker - Documentation
+
+## Overview
+This project is a **Password Strength Checker** built using **Python and Streamlit**. It helps users check their password strength and also provides an option to generate strong passwords. The program evaluates passwords based on length, uppercase letters, lowercase letters, numbers, and special characters.
+
+---
+
+## Technologies Used
+- **Python** (for logic and implementation)
+- **Streamlit** (for GUI-based interface)
+- **re (Regular Expressions)** (for pattern matching)
+
+---
+
+## Features
+1. **Password Strength Checking**
+   - Validates password length.
+   - Checks for uppercase and lowercase letters.
+   - Ensures the presence of numbers and special characters.
+   - Provides feedback on password strength.
+
+2. **Password Generator**
+   - Generates random strong passwords based on user-specified length.
+   - Ensures passwords include a mix of characters.
+   
+3. **Interactive UI**
+   - Built using Streamlit for an easy-to-use interface.
+   - Uses session state for better user experience.
+
+---
+
+## Implementation Details
+
+### **1. Importing Required Libraries**
+```python
+import re
+import streamlit as st
+from generatePass import password_generator
+```
+- **`re` (Regular Expressions)**: Used to match password patterns.
+- **`streamlit`**: Used to create the UI.
+- **`generatePass`**: A separate module for password generation.
+
+---
+
+### **2. Password Strength Checking Function**
+```python
+def check_password_strength(password):
+    score = 0
+    feedback = []
+
+    if len(password) >= 8:
+        score += 1
+    else:
+        feedback.append("⚠️ Password should be at least 8 characters long.")
+
+    if re.search(r"[A-Z]", password):
+        score += 1
+    else:
+        feedback.append("⚠️ Password should contain at least one uppercase letter.")
+
+    if re.search(r"[a-z]", password):
+        score += 1
+    else:
+        feedback.append("⚠️ Password should contain at least one lowercase letter.")
+
+    if re.search (r"\d", password):
+        score += 1
+    else:
+        feedback.append("⚠️ Password should contain at least one digit.")
+
+    if re.search(r"[!@#$%^&*]", password):
+        score += 1
+    else:
+        feedback.append("⚠️ Password should contain at least one special character (!@#$%^&*).")
+
+    if score >= 5:
+        feedback.append("✅ Your Password is Strong")
+    elif 3 <= score < 5:
+        feedback.append('🟡 Your password is moderate. Consider improving it.')
+    else:
+        feedback.append('🔴 Your password is weak. Please follow the suggestions above.')
+    
+    return feedback
+```
+- This function evaluates the password based on:
+  - **Length** (Minimum 8 characters)
+  - **Uppercase and Lowercase letters**
+  - **Numbers**
+  - **Special characters**
+- Returns feedback messages based on password strength.
+
+---
+
+### **3. Main Function (UI and Logic)**
+```python
+def main():
+    st.title("🔐 Password Strength Checker")
+    st.write("Enter your password below to check its strength.")
+    
+    password = st.text_input("Enter Your Password: ", type="password")
+
+    if st.button('Check password strength'):
+        if password:
+            feedback = check_password_strength(password)
+            for msg in feedback:
+                st.write(msg)
+        else:
+            st.error("Please Enter Your Password")
+    
+    if "generate_clicked" not in st.session_state:
+        st.session_state.generate_clicked = False
+    
+    if st.button('Generate password'):
+        st.session_state.generate_clicked = True
+    
+    if st.session_state.generate_clicked:
+        user_input = st.number_input("Please Enter Password Length (minimum 4):", min_value=4, value=8)
+        
+        if st.button('Generate and Check Strong Password'):
+            generated_password = password_generator(int(user_input))
+            st.success(f"Generated Password: {generated_password}")
+            feedback = check_password_strength(generated_password)
+            for msg in feedback:
+                st.write(msg)
+
+if __name__ == '__main__':
+    main()
+```
+
+---
+
+## **How It Works**
+1. **User Inputs Password** → Clicks "Check password strength"
+2. **System Evaluates Password** → Provides feedback
+3. **User Can Generate a Strong Password**
+   - Clicks "Generate password"
+   - Selects length
+   - Generates a password & checks its strength
+
+---
+
+## **Customization**
+### **Changing UI Theme (Dark Mode)**
+```python
+st.markdown(
+    """
+    <style>
+        .stApp { background-color: #142030; color: white; }
+        hr { border: none; height: 5px; background-color: red; }
+        h1, h2, h3, h4, h5, h6 { color: #e74c3c; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+```
+- This CSS customizes the **background color, text color, and horizontal line styles.**
+
+---
+
+## **Conclusion**
+✅ This project provides a simple yet effective **password security checker and generator**. It evaluates passwords using **regular expressions** and offers **real-time feedback** via **Streamlit**. Users can also **generate strong passwords** dynamically.
+
+🚀 Feel free to customize and improve the project further!
+
